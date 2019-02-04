@@ -32,7 +32,6 @@ Subnet 10  | 10.1.10.0/24
 
 ## Lab Guide 
 
-***
 
 ### Start UDF Lab Environment
 
@@ -91,42 +90,61 @@ Additionally, There's also an example of how to get a list of iAppLX extensions 
 
 * Expand the "Deploy Example Applications" folder.
 * Review the "Basic TCP Load Balancing" declaration.
-⋅⋅⋅ Tenant is: "TCP_LB_stack_1"
-⋅⋅⋅ Application is: "ssh_app" using the tcp template.
-⋅⋅⋅ It contains a 1 service class: Service_TCP, as well as a Pool class and Monitor class.  Note hose these tie into each other, the serviceMain class referencing the pool, etc.
+  * Tenant is: "TCP_LB_stack_1"
+  * Application is: "ssh_app" using the tcp template.
+  * It contains a 1 service class: Service_TCP, as well as a Pool class and Monitor class.  Note hose these tie into each other, the serviceMain class referencing the pool, etc.
 * Send this request.  You should get a 200 OK response with message success.
 * Login to the BIG-IP and review the configuration it created.
-⋅⋅⋅ A new Partition: "TCP_LB_stack_1" was created.
-⋅⋅⋅ Inside that new partition, a folder was created for the application "ssh_app"
-⋅⋅⋅ The folder contains the monitor, pool, and serviceMain virtual server.
+  * A new Partition: "TCP_LB_stack_1" was created.
+  * Inside that new partition, a folder was created for the application "ssh_app"
+  * The folder contains the monitor, pool, and serviceMain virtual server.
 * Next, review the "2nd Basic TCP Load Balancing" declaration.
 * Send this request.  This time you get back an error, 422.
 * Why did this declaration fail, what could be done to fix it?
 * Now, re-deploy the 1st Basic TCP load Balancing declaration using the Re-Deploy with shareNodes declaration.
-⋅⋅⋅ Note the only difference is in the pool member statement, we have an additional attribute "shareNodes" set to true, this places the LTM node objects in the /Common/ partition.
+  * Note the only difference is in the pool member statement, we have an additional attribute "shareNodes" set to true, this places the LTM node objects in the /Common/ partition.
 * Now, you can successfully deploy the 2nd Basic TCP load Balancing declaration.
 
 * Did you notice that the BIG-IP pair is now out of sync because by default AS3 does not perform a config sync operation after deployment?
-⋅⋅⋅ This is fixable using the "syncToGroup" in the AS3 class declaration.
+  * This is fixable using the "syncToGroup" in the AS3 class declaration.
 
 ***
 
-### Deploy HTTP/HTTPS applications
+### Deploy HTTP/HTTPS applications & Adding applications to a tenant
 
 From now on, we'll use shareNodes true in this lab, as we have a limited number of simulated pool members/nodes that we're sharing amongst multiple tenants.  Additionally, we'll specify "syncToGroup": "/Common/sync-failover-dg" in the AS3 class declaration which will perform a configuration sync.
 
 * Review the "Basic HTTP Load Balancing" application.
-⋅⋅⋅ Note: the different class "Service_HTTP" this tells AS3 to apply http profile to the virtual server.
+  * Note: the different class "Service_HTTP" this tells AS3 to apply http profile to the virtual server.
+* Deploy this new HTTP load balancing application and review configuration on BIG-IP.
+
+Next we'll look at HTTPS Offload and HTTPS Bridging:
+
+* Review & Deploy the declaration for "HTTPS Application with SSL Offload"
+* Review the Declaration for "HTTPS Application with SSL Bridging"
+  * Note that his is in the same tenant as the previous application.  What do you think will happen when we deploy it?
+  * Deploy this application, review the result, was this expected?
+* Review & Deploy the declaration for "HTTPS Tenant with SSL Offload and SSL Bridging Applications"
+  * See that we have two applications in the tenant now.
+  * Note that both applications have virtual servers named "serviceMain"
+* Review the PATCH to add a single application to an existing tenant.
+  * Note the different syntax, action: patch, and we include a patchBody to describe what we're patching.
+  * Send this request.  Note, the response includes the full tenant declaration.
 
 ***
 
-### Review General AS3 Operatiosn
+### Review General AS3 Operations
 
 * Expand the "General Operations" folder.
+* Review how to get a list of declarations with and without defaults
+* Review how to delete declarations.
 
 
 ***
 
-### Review 
+### Review AS3ExampleDeclarations from official tutorial
+
+* As time permits explore the official AS3 example Declarations, included in this postman collection.
+* Documentation here: [AS3 Example Declarations](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/declarations/)
 
 

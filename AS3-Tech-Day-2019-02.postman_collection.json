@@ -9,54 +9,7 @@
 			"name": "Install AS3",
 			"item": [
 				{
-					"name": "Download the AS3 Package to BIG-IP",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "6d965dd9-2536-4702-8234-fc658d33c92d",
-								"type": "text/javascript",
-								"exec": [
-									"tests[\"Status code is 200\"] = responseCode.code === 200;"
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "X-F5-Auth-Token",
-								"value": "{{bigip1_admin_token}}",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"command\":\"run\", \n\t\"utilCmdArgs\": \"-c 'curl -L -s -o /var/config/rest/downloads/{{as3rpmFileName}} https://github.com/F5Networks/f5-appsvcs-extension/blob/master/dist/{{as3Branch}}/{{as3rpmFileName}}?raw=true'\"\n}"
-						},
-						"url": {
-							"raw": "https://{{host}}/mgmt/tm/util/bash",
-							"protocol": "https",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"mgmt",
-								"tm",
-								"util",
-								"bash"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Enable LX Package Management",
+					"name": "Enable iAppLX Package Management",
 					"event": [
 						{
 							"listen": "test",
@@ -104,6 +57,53 @@
 					"response": []
 				},
 				{
+					"name": "Download the AS3 Package to BIG-IP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d965dd9-2536-4702-8234-fc658d33c92d",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\":\"run\", \n\t\"utilCmdArgs\": \"-c 'curl -L -s -o /var/config/rest/downloads/{{as3rpmFileName}} https://github.com/F5Networks/f5-appsvcs-extension/blob/master/dist/{{as3Branch}}/{{as3rpmFileName}}?raw=true'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{host}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Install RPM",
 					"event": [
 						{
@@ -139,13 +139,12 @@
 							"raw": "{\r\"operation\": \"INSTALL\",\r\"packageFilePath\": \"/var/config/rest/downloads/{{as3rpmFileName}}\"\r}"
 						},
 						"url": {
-							"raw": "https://{{host}}//mgmt/shared/iapp/package-management-tasks",
+							"raw": "https://{{host}}/mgmt/shared/iapp/package-management-tasks",
 							"protocol": "https",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"",
 								"mgmt",
 								"shared",
 								"iapp",
@@ -441,7 +440,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123456abcd1\",\n        \"label\": \"Basic TCP 2\",\n        \"remark\": \"Basic TCP Example with monitor\",\n        \"TCP_LB_stack_2\": {\n            \"class\": \"Tenant\",\n            \"ssh_app\": {\n                \"class\": \"Application\",\n                \"template\": \"tcp\",\n                \"serviceMain\": {\n                    \"class\": \"Service_TCP\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.49\"\n                    ],\n                    \"virtualPort\": 25,\n                    \"pool\": \"smtp_pool\"\n                },\n                \"ssh_pool\": {\n                    \"class\": \"Pool\",\n                    \"monitors\": [\n                        {\n                            \"use\": \"tcp_half_monitor_30sec\"\n                        }\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 25,\n                            \"serverAddresses\": [\n                                \"10.1.10.100\",\n                                \"10.1.10.101\"\n                            ]\n                        }\n                    ]\n                },\n                \"tcp_half_monitor_30sec\": {\n                    \"class\": \"Monitor\",\n                    \"monitorType\": \"tcp-half-open\",\n                    \"interval\": 30,\n                    \"timeout\": 91,\n                    \"adaptive\": false\n                }\n            }\n        }\n    }\n}"
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123456abcd1\",\n        \"label\": \"Basic TCP 2\",\n        \"remark\": \"Basic TCP Example with monitor\",\n        \"TCP_LB_stack_2\": {\n            \"class\": \"Tenant\",\n            \"ssh_app\": {\n                \"class\": \"Application\",\n                \"template\": \"tcp\",\n                \"serviceMain\": {\n                    \"class\": \"Service_TCP\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.49\"\n                    ],\n                    \"virtualPort\": 25,\n                    \"pool\": \"smtp_pool\"\n                },\n                \"smtp_pool\": {\n                    \"class\": \"Pool\",\n                    \"monitors\": [\n                        {\n                            \"use\": \"tcp_half_monitor_30sec\"\n                        }\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 25,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.100\",\n                                \"10.1.10.101\"\n                            ]\n                        }\n                    ]\n                },\n                \"tcp_half_monitor_30sec\": {\n                    \"class\": \"Monitor\",\n                    \"monitorType\": \"tcp-half-open\",\n                    \"interval\": 30,\n                    \"timeout\": 91,\n                    \"adaptive\": false\n                }\n            }\n        }\n    }\n}"
 						},
 						"url": {
 							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
@@ -461,6 +460,36 @@
 					"response": []
 				},
 				{
+					"name": "Re-Deploy 1st Basic TCP Load Balancing with shareNodes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123456abcd\",\n        \"label\": \"Basic TCP\",\n        \"remark\": \"Basic TCP Example with monitor\",\n        \"TCP_LB_stack_1\": {\n            \"class\": \"Tenant\",\n            \"ssh_app\": {\n                \"class\": \"Application\",\n                \"template\": \"tcp\",\n                \"serviceMain\": {\n                    \"class\": \"Service_TCP\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.50\"\n                    ],\n                    \"virtualPort\": 22,\n                    \"pool\": \"ssh_pool\"\n                },\n                \"ssh_pool\": {\n                    \"class\": \"Pool\",\n                    \"monitors\": [\n                        {\n                            \"use\": \"tcp_half_monitor_30sec\"\n                        }\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 22,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.100\",\n                                \"10.1.10.101\"\n                            ]\n                        }\n                    ]\n                },\n                \"tcp_half_monitor_30sec\": {\n                    \"class\": \"Monitor\",\n                    \"monitorType\": \"tcp-half-open\",\n                    \"interval\": 30,\n                    \"timeout\": 91,\n                    \"adaptive\": false\n                }\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Basic HTTP Load Balancing",
 					"request": {
 						"method": "POST",
@@ -472,7 +501,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123456abcde\",\n        \"label\": \"Basic HTTP\",\n        \"remark\": \"Basic HTTP Example with monitor\",\n        \"HTTP_LB_stack_1\": {\n            \"class\": \"Tenant\",\n            \"ssh_app\": {\n                \"class\": \"Application\",\n                \"template\": \"http\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTP\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.51\"\n                    ],\n                    \"virtualPort\": 80,\n                    \"pool\": \"http_pool\"\n                },\n                \"http_pool\": {\n                    \"class\": \"Pool\",\n                    \"monitors\": [\n                        {\n                            \"use\": \"http_get_status\"\n                        }\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 80,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.102\",\n                                \"10.1.10.103\"\n                            ]\n                        }\n                    ]\n                },\n                \"http_get_status\": {\n                    \"class\": \"Monitor\",\n                    \"monitorType\": \"http\",\n                    \"interval\": 5,\n                    \"timeout\": 16,\n                    \"send\": \"GET / HTTP/1.1\\r\\nHost: example.com\\r\\nConnection: close\\r\\n\\r\\n\",\n                    \"receive\": \"^http\\/\\\\d\\\\.\\\\d [2-3][0-9][0-9] .*\\\\r\\\\n\",\n                    \"adaptive\": false\n                }\n            }\n        }\n    }\n}"
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123456abcde\",\n        \"label\": \"Basic HTTP\",\n        \"remark\": \"Basic HTTP Example with monitor\",\n        \"HTTP_LB_stack_1\": {\n            \"class\": \"Tenant\",\n            \"http_app\": {\n                \"class\": \"Application\",\n                \"template\": \"http\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTP\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.51\"\n                    ],\n                    \"virtualPort\": 80,\n                    \"pool\": \"http_pool\"\n                },\n                \"http_pool\": {\n                    \"class\": \"Pool\",\n                    \"monitors\": [\n                        {\n                            \"use\": \"http_get_status\"\n                        }\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 80,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.102\",\n                                \"10.1.10.103\"\n                            ]\n                        }\n                    ]\n                },\n                \"http_get_status\": {\n                    \"class\": \"Monitor\",\n                    \"monitorType\": \"http\",\n                    \"interval\": 5,\n                    \"timeout\": 16,\n                    \"send\": \"GET / HTTP/1.1\\r\\nHost: example.com\\r\\nConnection: close\\r\\n\\r\\n\",\n                    \"receive\": \"^http\\/\\\\d\\\\.\\\\d [2-3][0-9][0-9] .*\\\\r\\\\n\",\n                    \"adaptive\": false\n                }\n            }\n        }\n    }\n}"
 						},
 						"url": {
 							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
@@ -502,7 +531,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123abc\",\n        \"label\": \"HTTPS application\",\n        \"remark\": \"HTTPS with predictive-node pool\",\n        \"HTTPS_offload_stack_3\": {\n            \"class\": \"Tenant\",\n            \"App1\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.54\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_name\",\n                    \"profileHTTP\": {\n                    \t\"use\": \"http_profile_xff\"\n                    }\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"http\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 80,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.102\",\n                                \"10.1.10.103\",\n                                \"10.1.10.104\"\n                            ]\n                        }\n                    ]\n                },\n                \"client_ssl_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"http_profile_xff\": {\n                \t\"class\": \"HTTP_Profile\",\n                \t\"xForwardedFor\": true\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            }\n        }\n    }\n}"
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123abc\",\n        \"label\": \"HTTPS application\",\n        \"remark\": \"HTTPS with predictive-node pool\",\n        \"HTTPS_Tenant\": {\n            \"class\": \"Tenant\",\n            \"HTTPS_Offload\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.54\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_name\",\n                    \"profileHTTP\": {\n                    \t\"use\": \"http_profile_xff\"\n                    }\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"http\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 80,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.102\",\n                                \"10.1.10.103\",\n                                \"10.1.10.104\"\n                            ]\n                        }\n                    ]\n                },\n                \"client_ssl_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"http_profile_xff\": {\n                \t\"class\": \"HTTP_Profile\",\n                \t\"xForwardedFor\": true\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            }\n        }\n    }\n}"
 						},
 						"url": {
 							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
@@ -516,8 +545,7 @@
 								"appsvcs",
 								"declare"
 							]
-						},
-						"description": "Two applications sharing a pool"
+						}
 					},
 					"response": []
 				},
@@ -533,7 +561,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123abcd\",\n        \"label\": \"HTTPS application\",\n        \"remark\": \"HTTPS with bridging\",\n        \"HTTPS_bridge_stack_4\": {\n            \"class\": \"Tenant\",\n            \"App1\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.55\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_profile_name\",\n                    \"clientTLS\": {\"bigip\":\"/Common/serverssl\"},\n                    \"profileHTTP\": {\n                    \t\"use\": \"http_profile_xff\"\n                    }\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"https\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 443,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.107\",\n                                \"10.1.10.108\"\n                            ]\n                        }\n                    ]\n                },\n                \"http_profile_xff\": {\n                \t\"class\": \"HTTP_Profile\",\n                \t\"xForwardedFor\": true\n                },\n                \"client_ssl_profile_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            }\n        }\n    }\n}"
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123abcd\",\n        \"label\": \"HTTPS application\",\n        \"remark\": \"HTTPS with bridging\",\n        \"HTTPS_Tenant\": {\n            \"class\": \"Tenant\",\n            \"HTTPS_Bridge\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.55\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_profile_name\",\n                    \"clientTLS\": {\"bigip\":\"/Common/serverssl\"},\n                    \"profileHTTP\": {\n                    \t\"use\": \"http_profile_xff\"\n                    }\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"https\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 443,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.101\",\n                                \"10.1.10.102\"\n                            ]\n                        }\n                    ]\n                },\n                \"http_profile_xff\": {\n                \t\"class\": \"HTTP_Profile\",\n                \t\"xForwardedFor\": true\n                },\n                \"client_ssl_profile_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            }\n        }\n    }\n}"
 						},
 						"url": {
 							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
@@ -547,8 +575,67 @@
 								"appsvcs",
 								"declare"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HTTPS Tenant with SSL Offload and SSL Bridging Applications",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123abcde\",\n        \"label\": \"HTTPS application\",\n        \"remark\": \"HTTPS with bridging\",\n        \"HTTPS_Tenant\": {\n            \"class\": \"Tenant\",\n            \"HTTPS_Bridge\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.55\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_profile_name\",\n                    \"clientTLS\": {\"bigip\":\"/Common/serverssl\"},\n                    \"profileHTTP\": {\n                    \t\"use\": \"http_profile_xff\"\n                    }\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"https\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 443,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.101\",\n                                \"10.1.10.102\"\n                            ]\n                        }\n                    ]\n                },\n                \"http_profile_xff\": {\n                \t\"class\": \"HTTP_Profile\",\n                \t\"xForwardedFor\": true\n                },\n                \"client_ssl_profile_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            },\n            \"HTTPS_Offload\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.54\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_name\",\n                    \"profileHTTP\": {\n                    \t\"use\": \"http_profile_xff\"\n                    }\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"http\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 80,\n                            \"shareNodes\": true,\n                            \"serverAddresses\": [\n                                \"10.1.10.102\",\n                                \"10.1.10.103\",\n                                \"10.1.10.104\"\n                            ]\n                        }\n                    ]\n                },\n                \"client_ssl_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"http_profile_xff\": {\n                \t\"class\": \"HTTP_Profile\",\n                \t\"xForwardedFor\": true\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            }\n        }\n    }\n}"
 						},
-						"description": "Two applications sharing a pool"
+						"url": {
+							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add single application to HTTPS Tenant",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"patch\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"patchBody\": [\n         {\n             \"path\": \"/HTTPS_Tenant/NewHTTPapp\",\n             \"op\": \"add\",\n             \"value\": {\n                 \"class\": \"Application\",\n                 \"template\": \"http\",\n                 \"serviceMain\": {\n                     \"class\": \"Service_HTTP\",\n                     \"virtualAddresses\": [\n                         \"10.1.10.56\"\n                     ],\n                     \"pool\": \"web_pool\"\n                 },\n                 \"web_pool\": {\n                     \"class\": \"Pool\",\n                     \"monitors\": [\n                         \"http\"\n                     ],\n                     \"members\": [\n                         {\n                             \"servicePort\": 80,\n                             \"serverAddresses\": [\n                                \"10.1.10.101\",\n                                \"10.1.10.102\"\n                             ],\n                             \"shareNodes\": true\n                         }\n                     ]\n                 }\n             }\n         }\n     ]\n}"
+						},
+						"url": {
+							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
 					},
 					"response": []
 				}
@@ -657,7 +744,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\",\n    \"declaration\": {\n        \"class\": \"ADC\",\n        \"schemaVersion\": \"3.0.0\",\n        \"id\": \"123abc\",\n        \"label\": \"HTTPS application\",\n        \"remark\": \"HTTPS with predictive-node pool\",\n        \"https_offload_example\": {\n            \"class\": \"Tenant\",\n            \"A1\": {\n                \"class\": \"Application\",\n                \"template\": \"https\",\n                \"serviceMain\": {\n                    \"class\": \"Service_HTTPS\",\n                    \"virtualAddresses\": [\n                        \"10.1.10.50\"\n                    ],\n                    \"pool\": \"web_pool\",\n                    \"serverTLS\": \"client_ssl_name\"\n                },\n                \"web_pool\": {\n                    \"class\": \"Pool\",\n                    \"loadBalancingMode\": \"predictive-node\",\n                    \"monitors\": [\n                        \"http\"\n                    ],\n                    \"members\": [\n                        {\n                            \"servicePort\": 80,\n                            \"serverAddresses\": [\n                                \"10.1.10.100\",\n                                \"10.1.10.101\",\n                                \"10.1.10.102\"\n                            ]\n                        }\n                    ]\n                },\n                \"client_ssl_name\": {\n                    \"class\": \"TLS_Server\",\n                    \"certificates\": [\n                        {\n                            \"certificate\": \"cert_name\"\n                        }\n                    ]\n                },\n                \"cert_name\": {\n                    \"class\": \"Certificate\",\n                    \"remark\": \"in practice we recommend using a passphrase\",\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\n                    \"passphrase\": {\n                        \"ciphertext\": \"ZjVmNQ==\",\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\n                    }\n                }\n            }\n        }\n    }\n}"
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\"\n}"
 						},
 						"url": {
 							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare",

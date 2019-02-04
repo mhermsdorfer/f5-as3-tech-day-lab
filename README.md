@@ -41,20 +41,32 @@ Once the environment has been started, confirm you are able to login to windows 
 From the windows host:
 1. Open cmd or bash git console, which ever your prefer.
 2. Clone repo with the following command: ``` git clone https://github.com/mhermsdorfer/f5-as3-tech-day-lab.git ```
-3. This will clone this repository into the current working directory, which is likely: C:\User\Administrator.
-4. navigate a file explorer to the newly created folder: C:\Users\Administrator\f5-as3-tech-day-lab
+3. This will clone this repository into the current working directory, which is likely: ```C:\User\Administrator```.
+4. navigate a file explorer to the newly created folder: ```C:\Users\Administrator\f5-as3-tech-day-lab```
 
 
 #### Setup Postman Environment
 
 1. Open up Postman.
 2. Click Import button in top left, to import the postman collection.
-3. Drag and drop the AS3-Tech-Day-2019-02.postman_collection.json file into the import window.
+3. Drag and drop the ```AS3-Tech-Day-2019-02.postman_collection.json``` file into the import window.
 4. Click Import button in top left, to import the postman environment.
-5. Drag and drop the AS3-Tech-Day-2019-02.postman_environment.json file into the import window.
+5. Drag and drop the ```AS3-Tech-Day-2019-02.postman_environment.json``` file into the import window.
 
+Alternatively, you can import from link using the following:
+Postman Collection: ```https://raw.githubusercontent.com/mhermsdorfer/f5-as3-tech-day-lab/master/AS3-Tech-Day-2019-02.postman_collection.json```
+Postman Environment: ```https://raw.githubusercontent.com/mhermsdorfer/f5-as3-tech-day-lab/master/AS3-Tech-Day-2019-02.postman_environment.json```
+
+Next, set the environment and start exploring the collection:
+1. In the dropdown at the top right, where it says "No Environment" select: "AS3 Tedch Day Lab - UDF"
+2. On the left hand side, where you see History & Collections, select Collections, and expand out AS3 Tech Day collection.
+
+Your screen should look like the following:
+![alt text](https://raw.githubusercontent.com/mhermsdorfer/f5-as3-tech-day-lab/master/postman_setup.png "Postman Screenshot")
 
 ### Install AS3 Extension
+
+
 
 ### Deploy first application
 
